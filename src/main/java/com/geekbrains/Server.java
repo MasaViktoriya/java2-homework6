@@ -24,15 +24,15 @@ public class Server {
                             String clientMessage = in.readUTF();
                             System.out.println("Client: " + clientMessage);
                             if (clientMessage.equalsIgnoreCase("quit")) {
+                                System.out.println("Client said goodbye. Close connection");
                                 try {
                                     in.close();
                                     out.close();
                                     socket.close();
-                                    serverSocket.close();
                                 }catch (IOException e){
                                     e.printStackTrace();
                                 }
-                              break;
+                                break;
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -46,11 +46,20 @@ public class Server {
             while (true) {
 
                 String text = sc.nextLine();
-
-                try {
-                    out.writeUTF(text);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (text.equalsIgnoreCase("quit")) {
+                    System.out.println("Server wants to quit. Close connection and shut down");
+                    try {
+                        out.writeUTF("quit");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    break;
+                } else {
+                    try {
+                        out.writeUTF(text);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (IOException e) {
